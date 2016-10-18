@@ -1,9 +1,9 @@
 #!/bin/bash
 # Filename:      custom_prompt.sh
-# Maintainer:    Dave Vehrs 
-# Last Modified: 12 Jul 2005 13:29:40 by Dave Vehrs
+# Original by:   Dave Vehrs
+# Modified by:   Robin Broda (coderobe)
 
-# Current Format: USER@HOST [dynamic section] { CURRENT DIRECTORY }$ 
+# Current Format: USER@HOST [dynamic section] CURRENT DIRECTORY $ 
 # USER:      (also sets the base color for the prompt)
 #   Red       == Root(UID 0) Login shell (i.e. sudo bash)
 #   Light Red == Root(UID 0) Login shell (i.e. su -l or direct login)
@@ -21,7 +21,7 @@
 #   Purple     == Local session
 # DYNAMIC SECTION:  
 #     (If count is zero for any of the following, it will not appear)
-#   [scr:#] ==== Number of detached screen sessions
+#   [tmx:#] ==== Number of detached tmux sessions
 #     Yellow    == 1-2
 #     Red       == 3+
 #   [bg:#]  ==== Number of backgrounded but still running jobs
