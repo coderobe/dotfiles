@@ -8,5 +8,5 @@ fi
 
 if $(locate_package perl);then
   addToPath /usr/bin/site_perl:/usr/bin/vendor_perl:/usr/bin/core_perl
-  addToPath /home/coderobe/.perl5/bin
+  addToPath $HOME/.perl5/bin
 fi
