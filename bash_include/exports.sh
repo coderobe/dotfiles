@@ -1,6 +1,9 @@
 # Terminal
 case $TERM in xterm|screen|tmux) export TERM=$TERM-256color; esac
 
+# SSH
+export SSH_AUTH_SOCK="$XDG_RUNTIME_DIR/ssh-agent.socket"
+
 # Defaults
 export EDITOR=nano
 if $(locate_package subl3); then
