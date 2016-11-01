@@ -16,6 +16,6 @@ export -f cdr_colorize
 
 function cdr_log () {
 	exe="$(basename $0)"
-	echo "$(cdr_colorize $COL_RED [${exe%.*}]) ${@# *}"
+	echo -e "$(cdr_colorize $COL_RED [${exe%.*}]) ${@# *}"
 }
 export -f cdr_log

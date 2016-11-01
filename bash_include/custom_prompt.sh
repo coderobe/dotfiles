@@ -141,14 +141,20 @@ function promptcmd () {
         PS1="${PS1}\[${COLOR_RED}\]\h " 
     fi
 
-    # Detached Screen Sessions
+    # Detached tmux Sessions
     local DTCHSCRN=$(tmux ls 2>/dev/null | egrep "^[0-9]+:" | wc -l)
     if [ ${DTCHSCRN} -gt 2 ]; then
         PS1="${PS1}\[${COLOR_RED}\][tmx:${DTCHSCRN}] "
     elif [ ${DTCHSCRN} -gt 0 ]; then
         PS1="${PS1}\[${COLOR_YELLOW}\][tmx:${DTCHSCRN}] "
     fi
-   
+    
+    # Running Machinectl VMs
+    local MCTLVM=$(machinectl list | tail -n1 | cut -d' ' -f1)
+    if [ ${MCTLVM} -gt 0 ]; then
+        PS1="${PS1}\[${COLOR_PINK}\][mctl:${MCTLVM}] "
+    fi
+    
     # Backgrounded running jobs
     local BKGJBS=$(jobs -r | wc -l )
     if [ ${BKGJBS} -gt 2 ]; then
