@@ -1,3 +1,3 @@
 [[ -f ~/.bashrc ]] && . ~/.bashrc
 
-xhost +local:
+xhost +local: > /dev/null 2>&1
