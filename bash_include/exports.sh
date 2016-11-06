@@ -7,7 +7,7 @@ export SSH_AUTH_SOCK="$XDG_RUNTIME_DIR/ssh-agent.socket"
 # Defaults
 export EDITOR=nano
 if $(locate_package subl3); then
-  export VISUAL=subl3
+  export VISUAL="subl3 -w"
 else
   export VISUAL=$EDITOR
 fi
