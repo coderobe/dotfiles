@@ -1,5 +1,6 @@
 function locate_package () {
-  ! [ -z "$(whereis $1 | cut -d':' -f2-)" ]
+  #! [ -z "$(whereis $1 | cut -d':' -f2-)" ]
+  ! [ $(type -p "$1" >/dev/null) ]
 }
 
 function cdr_exedir () {
