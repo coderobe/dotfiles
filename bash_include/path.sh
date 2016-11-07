@@ -15,4 +15,4 @@ if $(locate_package perl);then
   addToPath $HOME/.perl5/bin
 fi
 
-addToPathStart "~/Documents/Scripts/bin"
+addToPathStart "$HOME/Documents/Scripts/bin"
