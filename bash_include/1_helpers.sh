@@ -1,5 +1,4 @@
 function locate_package () {
-  #! [ -z "$(whereis $1 | cut -d':' -f2-)" ]
   ! [ $(type -p "$1" >/dev/null) ]
 }
 
@@ -17,6 +16,9 @@ export -f cdr_colorize
 
 function cdr_log () {
 	exe="$(basename -- $0)"
-	echo -e "$(cdr_colorize $COL_RED [${exe%.*}]) ${@# *}"
+	script="$(basename ${BASH_SOURCE})"
+        output="${exe}"
+        if [ -z "$script" ]; then output="${script}"; fi
+	echo -e "$(cdr_colorize $COL_LIGHTRED [${output%.*}]) ${@# *}"
 }
 export -f cdr_log
