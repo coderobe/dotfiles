@@ -1,5 +1,5 @@
 function locate_package () {
-  ! [ $(type -p "$1" >/dev/null) ]
+  type -p "$1" >/dev/null
 }
 
 function cdr_exedir () {
