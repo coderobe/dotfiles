@@ -10,8 +10,11 @@ if [ -z "${BASH_SOURCE##*sshrc*}" ]; then
 fi
 
 # Source all include scripts
-for script in $(ls $CDR_SCRIPTPATH | egrep '.sh$')
-  do source "$CDR_SCRIPTPATH$script" 2>/dev/null
+for script in $(ls $CDR_SCRIPTPATH | egrep '.sh$'); do
+  if [ -z "${CDR_DEBUG}" ]
+    then source "$CDR_SCRIPTPATH$script" 2>/dev/null
+    else source "$CDR_SCRIPTPATH$script"
+  fi
 done
 
 # Evaluate all execute scripts
