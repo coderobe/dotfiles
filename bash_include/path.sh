@@ -19,3 +19,7 @@ CDR_BINDIR="$HOME/Documents/Scripts/bin"
 if [ -d "${CDR_BINDIR}" ]; then
   addToPathStart "${CDR_BINDIR}"
 fi
+
+if $(locate_package ccache) && $(locate_package colorgcc); then
+  addToPathStart "/usr/lib/colorgcc/bin/"
+fi

@@ -35,3 +35,8 @@ if $(locate_package perl); then
   export PERL_MB_OPT="--install_base \"$HOME/.perl5\""
   export PERL_MM_OPT="INSTALL_BASE=$HOME/.perl5"
 fi
+
+# GCC
+if $(locate_package ccache) && $(locate_package colorgcc); then
+  export CCACHE_PATH="/usr/bin"
+fi
