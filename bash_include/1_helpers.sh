@@ -16,7 +16,7 @@ export -f cdr_colorize
 
 function cdr_log () {
 	exe="$(basename -- $0)"
-	script="$(basename ${BASH_SOURCE})"
+	script="$(basename -- ${BASH_SOURCE})"
         output="${exe}"
         if [ -z "$script" ]; then output="${script}"; fi
 	echo -e "$(cdr_colorize $COL_LIGHTRED [${output%.*}]) ${@# *}"
