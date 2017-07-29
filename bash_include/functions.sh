@@ -12,3 +12,19 @@ if $(locate_package git); then
     git --git-dir="$1/.git" format-patch -k -1 --stdout "$2" | git am -3 -k
   }
 fi
+
+if $(locate_package nano); then
+  function nano () {
+    local WRITABLE=1
+    for file in "$@"; do
+      [ -w "${file}" ] || WRITABLE=0
+    done
+    if [ ${WRITABLE} -eq 0 ]; then
+      cdr_log "no write permission, accessing file(s) as root..."
+      sleep 1
+      sudo nano $@
+    else
+      command nano $@
+    fi
+  }
+fi
