@@ -17,7 +17,9 @@ if $(locate_package nano); then
   function nano () {
     local WRITABLE=1
     for file in "$@"; do
-      [ -w "${file}" ] || WRITABLE=0
+      if [ -f "${file}" ] && [ -w "${file}" ];
+        then WRITABLE=0
+      fi
     done
     if [ ${WRITABLE} -eq 0 ]; then
       cdr_log "no write permission, accessing file(s) as root..."
