@@ -17,8 +17,8 @@ if $(locate_package nano); then
   function nano () {
     local WRITABLE=1
     for file in "$@"; do
-      if [ -f "${file}" ] && [ -w "${file}" ];
-        then WRITABLE=0
+      if [ ! -w "${file}" ]; then
+        WRITABLE=0
       fi
     done
     if [ ${WRITABLE} -eq 0 ]; then
