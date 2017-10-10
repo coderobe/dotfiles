@@ -22,9 +22,10 @@ if $(locate_package nano); then
       fi
     done
     if [ ${WRITABLE} -eq 0 ]; then
+      local OWNER=$(stat -c '%U' $file)
       cdr_log "no write permission, accessing file(s) as root..."
       sleep 1
-      sudo nano $@
+      sudo -u "${OWNER}" nano $@
     else
       command nano $@
     fi
