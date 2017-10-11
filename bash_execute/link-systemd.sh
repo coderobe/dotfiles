@@ -10,4 +10,4 @@ if test "$(ls -A "$(cdr_exedir)/../systemd")"; then
 		fi
 	done
 )
-if
+fi
