@@ -1,5 +1,5 @@
 SYSTEMD_USER_DIR="$HOME/.config/systemd/user"
-mkdir -p "$SYSTEMD_USER_DIR" > /dev/null 2>&1
+if [ -d "$SYSTEMD_USER_DIR" ]; then
 (
 	cd "${SYSTEMD_USER_DIR}"
 	for service in *; do
@@ -11,3 +11,4 @@ mkdir -p "$SYSTEMD_USER_DIR" > /dev/null 2>&1
 		unset REALPATH
 	done
 )
+fi
