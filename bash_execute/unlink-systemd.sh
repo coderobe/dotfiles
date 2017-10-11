@@ -1,4 +1,3 @@
-SYSTEMD_USER_DIR="$HOME/.config/systemd/user"
 if [ -d "${SYSTEMD_USER_DIR}" ]; then
 (
 	cd "${SYSTEMD_USER_DIR}"
