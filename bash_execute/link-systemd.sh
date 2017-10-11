@@ -1,4 +1,3 @@
-SYSTEMD_USER_DIR="$HOME/.config/systemd/user"
 if [ "$(ls -A \"$(cdr_exedir)/../systemd\")" ]; then
 (
 		mkdir -p "${SYSTEMD_USER_DIR}" > /dev/null 2>&1
