@@ -23,3 +23,7 @@ fi
 if $(locate_package ccache) && $(locate_package colorgcc); then
   addToPathStart "/usr/lib/colorgcc/bin/"
 fi
+
+if [ -d "/usr/local/vitasdk" ]; then
+  export PATH=$VITASDK/bin:$PATH
+fi
