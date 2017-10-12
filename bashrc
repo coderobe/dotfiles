@@ -4,6 +4,7 @@
 # Set paths
 CDR_SCRIPTPATH="$HOME/Documents/Dotfiles/bash_include/"
 CDR_EXECPATH="$HOME/Documents/Dotfiles/bash_execute/"
+export CDR_SYSTEMD_DIR="$HOME/Documents/Dotfiles/systemd"
 export SYSTEMD_USER_DIR="$HOME/.config/systemd/user"
 
 # Respect sshrc paths
