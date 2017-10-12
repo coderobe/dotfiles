@@ -40,3 +40,8 @@ fi
 if $(locate_package ccache) && $(locate_package colorgcc); then
   export CCACHE_PATH="/usr/bin"
 fi
+
+# VITA sdk
+if [ -d "/usr/local/vitasdk" ]; then
+  export VITASDK=/usr/local/vitasdk
+fi
