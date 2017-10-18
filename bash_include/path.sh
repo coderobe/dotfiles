@@ -11,8 +11,8 @@ if $(locate_package ruby);then
 fi
 
 if $(locate_package perl);then
-  addToPath /usr/bin/site_perl:/usr/bin/vendor_perl:/usr/bin/core_perl
-  addToPath $HOME/.perl5/bin
+  addToPath "/usr/bin/site_perl:/usr/bin/vendor_perl:/usr/bin/core_perl"
+  addToPath "$HOME/.perl5/bin"
 fi
 
 CDR_BINDIR="$HOME/Documents/Scripts/bin"
@@ -25,5 +25,5 @@ if $(locate_package ccache) && $(locate_package colorgcc); then
 fi
 
 if [ -d "/usr/local/vitasdk" ]; then
-  export PATH=$VITASDK/bin:$PATH
+  addToPathStart "$VITASDK/bin"
 fi
