@@ -16,9 +16,13 @@ export -f cdr_colorize
 
 function cdr_log () {
 	exe="$(basename -- $0)"
-	script="$(basename -- ${BASH_SOURCE})"
-        output="${exe}"
-        if [ -z "$script" ]; then output="${script}"; fi
+  output="${exe}"
+  if ! [ -z "${CDR_SCRIPT}" ]; then output="${CDR_SCRIPT}"; fi
 	echo -e "$(cdr_colorize $COL_LIGHTRED [${output%.*}]) ${@# *}"
 }
 export -f cdr_log
+
+function cdr_debug_log () {
+  if ! [ -z "${CDR_DEBUG}" ]; then cdr_log "${@# *}"; fi
+}
+export -f cdr_debug_log
