@@ -31,9 +31,9 @@ done
 
 CDR_SCRIPT="bash"
 
-CDR_VERSION="unk"
+CDR_VERSION="unknown version"
 if $(locate_package git); then  
-  CDR_VERSION="$(cd ${CDR_LOCATION} && git rev-parse --short HEAD)"
+  CDR_VERSION="updated $(cd ${CDR_LOCATION} && git log -1 --format=%ar)"
 fi
 
 cdr_log "this is a $(cdr_colorize ${COL_RED} $(basename ${SHELL})) shell, running $(cdr_colorize ${COL_CYAN} coderobe/dotfiles) [$(cdr_colorize ${COL_BROWN} ${CDR_VERSION})] on $(cdr_colorize ${COL_PINK} ${HOSTNAME})"
