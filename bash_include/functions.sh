@@ -1,3 +1,9 @@
+if $(locate_package cpp); then
+  function defines () {
+    cpp -dM /dev/null | sort | cut -d" " -f2- | sed 's/^_*//' | sed 's/__* / /' | sort | uniq
+  }
+fi
+
 if $(locate_package bauerbill); then
   function bb () {
     (
