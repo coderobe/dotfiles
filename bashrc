@@ -2,9 +2,39 @@
 [[ $- != *i* ]] && return
 
 # Fix WSL (fuck microsoft for half-assing their implementations)
+# TODO: fix this half-assed fix
+dbus_env="$HOME/.dbus-wsl"
+ssh_env="$HOME/.ssh-wsl"
+function wsl_fix_daemon {
+  echo "Windows is garbage. Launching demons manually"
+  echo "Summoning DBUS"
+  dbus-launch --sh-syntax > "${dbus_env}"
+  echo "Summoning SSH Agent"
+  ssh-agent > "${ssh_env}"
+  echo "Setting up environment"
+  chmod 600 "${dbus_env}"
+  chmod 600 "${ssh_env}"
+  . "${dbus_env}" > /dev/null
+  . "${ssh_env}" > /dev/null
+}
 CDR_WSL=0
 if [ ! -z "$(uname -a | grep 'Microsoft')" ]; then
   CDR_WSL=1
+  export DISPLAY="$(hostname):0.0"
+  if [ -f "${dbus_env}" ]; then
+    . "${dbus_env}" > /dev/null
+    . "${ssh_env}" > /dev/null
+    ps -ef | grep ${DBUS_SESSION_BUS_PID} | grep dbus-daemon > /dev/null || {
+      wsl_fix_daemon
+    }
+  else
+    wsl_fix_daemon
+  fi
+  export DBUS_SESSION_BUS_ADDRESS
+  export DBUS_SESSION_BUS_PID
+  export DBUS_SESSION_BUS_WINDOWID
+  export SSH_AUTH_SOCK
+  export SSH_AGENT_PID
 fi
 
 # Set paths
