@@ -150,11 +150,14 @@ function promptcmd () {
     fi
     
     # Running Machinectl VMs
-    local MCTLVM=$(machinectl list | tail -n1 | cut -d' ' -f1)
-    if [ ${MCTLVM} = "No" ]; then
+    local MCTLVM="No"
+    if [ "${CDR_WSL}" == 0 ]; then
+        MCTLVM=$(machinectl list | tail -n1 | cut -d' ' -f1)
+    fi
+    if [ "${MCTLVM}" == "No" ]; then
         MCTLVM=0
     fi
-    if [ ${MCTLVM} -gt 0 ]; then
+    if [ "${MCTLVM}" -gt 0 ]; then
         PS1="${PS1}\[${COLOR_PINK}\][mctl:${MCTLVM}] "
     fi
     

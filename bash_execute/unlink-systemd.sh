@@ -1,4 +1,4 @@
-if [ -d "${SYSTEMD_USER_DIR}" ]; then
+if [ -d "${SYSTEMD_USER_DIR}" ] && [ "${CDR_WSL}" == 0 ]; then
 (
 	cd "${SYSTEMD_USER_DIR}"
 	for service in *; do

@@ -1,6 +1,12 @@
 # If not running interactively, don't do anything
 [[ $- != *i* ]] && return
 
+# Fix WSL (fuck microsoft for half-assing their implementations)
+CDR_WSL=0
+if [ ! -z "$(uname -a | grep 'Microsoft')" ]; then
+  CDR_WSL=1
+fi
+
 # Set paths
 CDR_LOCATION="$HOME/Documents/Dotfiles/"
 CDR_SCRIPTPATH="$HOME/Documents/Dotfiles/bash_include/"

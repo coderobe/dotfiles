@@ -1,4 +1,4 @@
-if [ "$(ls -A ${CDR_SYSTEMD_DIR})" ]; then
+if [ "$(ls -A ${CDR_SYSTEMD_DIR})" ] && [ "${CDR_WSL}" == 0 ]; then
 (
 		mkdir -p "${SYSTEMD_USER_DIR}" > /dev/null 2>&1
 		cd "${CDR_SYSTEMD_DIR}"
