@@ -6,7 +6,7 @@
 dbus_env="$HOME/.dbus-wsl"
 ssh_env="$HOME/.ssh-wsl"
 function wsl_fix_daemon {
-  echo "Windows is garbage. Launching demons manually"
+  echo "Windows is garbage. Launching daemons manually"
   echo "Summoning DBUS"
   dbus-launch --sh-syntax > "${dbus_env}"
   echo "Summoning SSH Agent"
@@ -21,10 +21,10 @@ CDR_WSL=0
 if [ ! -z "$(uname -a | grep 'Microsoft')" ]; then
   CDR_WSL=1
   export DISPLAY="$(hostname):0.0"
-  if [ -f "${dbus_env}" ]; then
+  if [ -f "${ssh_env}" ]; then
     . "${dbus_env}" > /dev/null
     . "${ssh_env}" > /dev/null
-    ps -ef | grep ${DBUS_SESSION_BUS_PID} | grep dbus-daemon > /dev/null || {
+    ps -ef | grep ${SSH_AGENT_PID} | grep ssh-agent > /dev/null || {
       wsl_fix_daemon
     }
   else
@@ -35,6 +35,7 @@ if [ ! -z "$(uname -a | grep 'Microsoft')" ]; then
   export DBUS_SESSION_BUS_WINDOWID
   export SSH_AUTH_SOCK
   export SSH_AGENT_PID
+  export NO_AT_BRIDGE=1
 fi
 
 # Set paths
