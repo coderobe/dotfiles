@@ -45,3 +45,9 @@ fi
 if [ -d "/usr/local/vitasdk" ]; then
   export VITASDK=/usr/local/vitasdk
 fi
+
+# Emscripten
+if [ -d "/usr/lib/emscripten" ]; then
+  export EMSCRIPTEN="/usr/lib/emscripten"
+  export EMSCRIPTEN_FASTCOMP="/usr/lib/emscripten-fastcomp"
+fi

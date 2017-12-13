@@ -36,6 +36,10 @@ if [ -d "/usr/local/vitasdk" ]; then
   addToPathStart "${VITASDK}/bin"
 fi
 
+if [ -d "${EMSCRIPTEN}" ]; then
+  addToPathStart "$EMSCRIPTEN"
+fi
+
 cdr_debug_log "Path now '$(cdr_colorize ${COL_LIGHTBLUE} ${PATH})'"
 cdr_debug_log "Cleaning up..."
 if [ -n "${PATH}" ]; then
