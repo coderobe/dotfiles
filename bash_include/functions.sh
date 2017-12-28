@@ -1,3 +1,10 @@
+if $(locate_package wine); then
+  function wine-isolated () {
+    WINEPREFIX="$1" WINEARCH=win32 winetricks sandbox
+    WINEPREFIX="$1" WINEARCH=win32 wine "$2"
+  }
+fi
+
 if $(locate_package cpp); then
   function defines () {
     cpp -dM /dev/null | sort | cut -d" " -f2- | sed 's/^_*//' | sed 's/__* / /' | sort | uniq
