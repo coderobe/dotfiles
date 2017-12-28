@@ -2,7 +2,7 @@ alt + F2
 	rofi-apps
 
 Print
-	gnome-screenshot -a
+	screencap
 
 super + s
         pkill -USR1 -x sxhkd
