@@ -8,4 +8,5 @@ I use [config curator](https://github.com/razor-x/config_curator) to manage my d
 
 # License
 
-This work, originally authored by Robin Broda, is licensed under the Beerware license revision 42.
+This work, originally authored by Robin Broda, is licensed under the Beerware license revision 42.  
+Files in `3rdparty` are not mine & subject to their own licenses in their headers - if there is no additional licensing info attached to a file then i found it like this and wasn't able to find the original source.
