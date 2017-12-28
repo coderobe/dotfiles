@@ -23,6 +23,9 @@ config_files:
     dst: .perl5/lib/perl5/Xclip.pm
     packages: [ perl ]
 
+  - src: 3rdparty/screencap
+    dst: .bin/screencap
+
   - src: xinitrc
     dst: .xinitrc
     packages: [ xorg-xset xorg-xrandr xfwm4 xfdesktop xfce-polkit-git xfce4-notifyd bamf thunar ]
