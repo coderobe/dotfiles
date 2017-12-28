@@ -3,4 +3,5 @@ use Lingua::Translit;
 use Xclip;
 #my $tr = new Lingua::Translit('DIN 1460 RUS'); # doesn't combine ыа to я
 my $tr = new Lingua::Translit('GOST 7.79 RUS'); # doesnt transliterate '
-Xclip::copy2($tr->translit_reverse(@ARGV ? shift : join'',<>));
+#Xclip::copy2($tr->translit_reverse(@ARGV ? shift : join'',<>));
+Xclip::copy2($tr->translit_reverse(join(" ", @ARGV)));
