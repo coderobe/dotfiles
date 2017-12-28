@@ -1,13 +1,4 @@
-config_files:
-  - src: 3rdparty/Xclip.pm
-    dst: .perl5/lib/perl5/Xclip.pm
-    packages: [ perl ]
-
-symlinks:
-  - src: xinitrc
-    dst: .xinitrc
-    packages: [ xorg-xset xorg-xrandr xfwm4 xfdesktop xfce-polkit-git xfce4-notifyd bamf thunar ]
-
+components:
   - src: bin
     dst: .bin
 
@@ -19,10 +10,6 @@ symlinks:
     dst: .config/nano
     packages: [ nano ]
 
-  - src: config/polybar
-    dst: .config/polybar
-    packages: [ polybar ]
-
   - src: config/trizen
     dst: .config/trizen
     packages: [ trizen ]
@@ -30,6 +17,20 @@ symlinks:
   - src: config/dapper
     dst: .config/dapper
     packages: [ dapper ]
+
+config_files:
+  - src: 3rdparty/Xclip.pm
+    dst: .perl5/lib/perl5/Xclip.pm
+    packages: [ perl ]
+
+  - src: xinitrc
+    dst: .xinitrc
+    packages: [ xorg-xset xorg-xrandr xfwm4 xfdesktop xfce-polkit-git xfce4-notifyd bamf thunar ]
+
+  - src: config/polybar
+    dst: .config/polybar
+    packages: [ polybar ]
+
   - src: config/dapper.conf
     dst: .config/dapper.conf
     packages: [ dapper ]
