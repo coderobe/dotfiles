@@ -1,0 +1,12 @@
+symlinks:
+  - src: config/dapper.conf
+    dst: .config/dapper.conf
+    packages: [ dapper ]
+
+  - src: bashrc
+    dst: .bashrc
+    packages: [ bash ]
+
+  - src: bash_profile
+    dst: .bash_profile
+    packages: [ bash ]
