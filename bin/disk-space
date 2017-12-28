@@ -1,0 +1,3 @@
+#!/usr/bin/env bash
+
+btrfs filesystem usage / 2>&1 | grep "Free" | tr -s " " | tr -s '\t' " " | cut -d" " -f6 | cut -d")" -f1
