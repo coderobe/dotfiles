@@ -23,7 +23,7 @@ if $(locate_package perl);then
   addToPath "${HOME}/.perl5/bin"
 fi
 
-CDR_BINDIR="$HOME/Documents/Scripts/bin"
+CDR_BINDIR="$HOME/.bin"
 if [ -d "${CDR_BINDIR}" ]; then
   addToPathStart "${CDR_BINDIR}"
 fi
