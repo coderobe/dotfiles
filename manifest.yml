@@ -1,4 +1,30 @@
 symlinks:
+  - src: xinitrc
+    dst: .xinitrc
+    packages: [ xorg-xset xorg-xrandr xfwm4 xfdesktop xfce-polkit-git xfce4-notifyd bamf thunar ]
+
+  - src: bin
+    dst: .bin
+
+  - src: config/sxhkd
+    dst: .config/sxhkd
+    packages: [ sxhkd ]
+
+  - src: config/nano
+    dst: .config/nano
+    packages: [ nano ]
+
+  - src: config/polybar
+    dst: .config/polybar
+    packages: [ polybar ]
+
+  - src: config/trizen
+    dst: .config/trizen
+    packages: [ trizen ]
+
+  - src: config/dapper
+    dst: .config/dapper
+    packages: [ dapper ]
   - src: config/dapper.conf
     dst: .config/dapper.conf
     packages: [ dapper ]
@@ -6,7 +32,6 @@ symlinks:
   - src: bashrc
     dst: .bashrc
     packages: [ bash ]
-
   - src: bash_profile
     dst: .bash_profile
     packages: [ bash ]
