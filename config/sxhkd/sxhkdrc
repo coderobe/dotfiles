@@ -1,0 +1,15 @@
+alt + F2
+	rofi-apps
+
+Print
+	gnome-screenshot -a
+
+super + s
+        pkill -USR1 -x sxhkd
+
+XF86Audio{RaiseVolume,LowerVolume,Mute,MicMute}
+        amixer {-D pulse sset Master '5%+',-D pulse sset Master '5%-',set Master toggle,set Capture toggle}
+
+XF86MonBrightness{Up,Down}
+        xbacklight {+,-}10
+
