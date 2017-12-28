@@ -17,9 +17,9 @@ function wsl_fix_daemon {
   . "${dbus_env}" > /dev/null
   . "${ssh_env}" > /dev/null
 }
-CDR_WSL=0
+export CDR_WSL=0
 if [ ! -z "$(uname -a | grep 'Microsoft')" ]; then
-  CDR_WSL=1
+  export CDR_WSL=1
   export DISPLAY="$(hostname):0.0"
   if [ -f "${ssh_env}" ]; then
     . "${dbus_env}" > /dev/null
