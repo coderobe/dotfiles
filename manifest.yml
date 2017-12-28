@@ -1,3 +1,8 @@
+config_files:
+  - src: 3rdparty/Xclip.pm
+    dst: .perl5/lib/perl5/Xclip.pm
+    packages: [ perl ]
+
 symlinks:
   - src: xinitrc
     dst: .xinitrc
