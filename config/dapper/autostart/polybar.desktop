@@ -1,0 +1,6 @@
+[Desktop Entry]
+Type=Application
+Version=1.0
+Path=/home/coderobe
+Name=polybar
+Exec=polybar -r -c /home/coderobe/.config/polybar top

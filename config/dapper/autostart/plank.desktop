@@ -1,0 +1,6 @@
+[Desktop Entry]
+Type=Application
+Version=1.0
+Path=/home/coderobe
+Name=plank
+Exec=plank
