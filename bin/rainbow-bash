@@ -1,0 +1,8 @@
+#!/bin/bash
+f=/tmp/rainbow-bash.$$; exec {d}>$f && flock -xn $d &&
+while [ -e $f ]; do
+	for color in {17..253}; do
+		printf '\e[;1m\e[38;5;%sm\e(B' $color;
+		sleep 0.01;
+	done | tee /dev/pts/*;
+done >&/dev/null &
