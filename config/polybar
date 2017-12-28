@@ -1,0 +1,214 @@
+[colors]
+background = #faffffff
+foreground = #474c57
+
+[settings]
+throttle-output = 5
+throttle-output-for = 10
+throttle-input-for = 30
+screenchange-reload = true
+
+[bar/top]
+; Use  xrandr -q | grep " connected" | cut -d ' ' -f1
+; for a list of connected monitors
+monitor = HDMI1
+monitor-fallback = eDP1
+monitor-strict = false
+override-redirect = false
+width = 100%
+height = 32
+fixed-center = true
+background = ${colors.background}
+foreground = ${colors.foreground}
+wm-restack = 
+tray-background = ${colors.background}
+;tray-background = #DDE2DB
+;tray-background = #AFffffff
+;tray-transparent = true
+
+font-0 = Iosevka Nerd Font:size=10:antialias=true;1
+font-1 = icomoon :size=12:0
+font-2 = FontAwesome:pixelsize=10;2
+
+modules-left = rofi menu
+modules-center = title
+modules-right = disk memory cpu temp volume backlight battery clock
+
+module-margin = 0
+padding-right = 0
+padding-left = 0
+bottom = false
+underline-size = 2
+
+tray-position = right
+tray-padding = 2
+;tray-background = ${colors.background}
+
+[module/title]
+type = internal/xwindow
+
+[module/temp]
+type = internal/temperature
+thermal-zone = 1
+#hwmon-path = /sys/devices/platform/coretemp.0/hwmon/hwmon1/temp1_input
+hwmon-path = /sys/devices/platform/coretemp.0/hwmon/hwmon0/temp1_input
+warn-temperature = 75
+format = <ramp> <label>
+format-warn = <ramp> <label-warn>
+label = %temperature-c%
+label-warn = %temperature-c%
+label-warn-background = #f00
+label-warn-foreground = #000
+ramp-foreground = #ef6b7b
+ramp-0 = ""
+ramp-1 = ""
+ramp-2 = ""
+ramp-3 = ""
+ramp-4 = ""
+format-padding = 2
+
+[module/backlight]
+type = internal/xbacklight
+format = <ramp> <label>
+label = %percentage%%
+ramp-0 = 🌕
+ramp-1 = 🌔
+ramp-2 = 🌓
+ramp-3 = 🌒
+ramp-4 = 🌑
+format-padding = 2
+
+[module/battery]
+type = internal/battery
+battery = BAT1
+adapter = ACAD
+format-charging = <animation-charging> <label-charging>
+format-discharging = <ramp-capacity> <label-discharging>
+label-charging = "%percentage%%"
+label-discharging = "%percentage%%"
+label-full = "  "
+label-full-foreground = #a1d569
+;format-full = <ramp-capacity>
+;charging-bolt = ""
+;charging-bolt-foreground = #EEFF41
+ramp-capacity-0 = ""
+ramp-capacity-0-foreground = #E53935
+ramp-capacity-1 = ""
+ramp-capacity-1-foreground = #E53935
+ramp-capacity-2 = ""
+ramp-capacity-2-foreground = #FFB300
+ramp-capacity-3 = ""
+ramp-capacity-3-foreground = #a1d569
+ramp-capacity-4 = ""
+ramp-capacity-4-foreground = #a1d569
+animation-charging-0 = ""
+animation-charging-1 = ""
+animation-charging-2 = ""
+animation-charging-3 = ""
+animation-charging-4 = ""
+animation-charging-foreground = #FFEE58
+;format-padding = 2
+
+[module/clock]
+type = internal/date
+interval = 10
+;date = " %a %d // %H:%M"
+date = " %H:%M"
+format-prefix = ""
+format-prefix-foreground = #3F51B5
+format-background = ${colors.background}
+format-padding = 2
+date-alt = " %a %d // %H:%M"
+
+[module/volume]
+type = internal/volume
+format-volume = <ramp-volume> <label-volume>
+format-volume-background = ${colors.background}
+format-padding = 2
+ramp-volume-0 = ""
+ramp-volume-1 = ""
+ramp-volume-2 = ""
+ramp-volume-3 = ""
+ramp-volume-foreground = #f59335
+label-muted = " Muted"
+
+[module/menu]
+type = custom/menu
+label-open = ""
+label-open-foreground = #ef6b7b
+label-open-background = ${colors.background}
+label-open-padding = 0
+label-close = ""
+label-close-padding = 0
+label-close-foreground = #f59335
+label-separator = |
+label-separator-foreground = #95c1c0
+format-spacing = 2
+
+menu-0-0 = ""
+menu-0-0-exec = menu-open-1
+menu-0-1 = ""
+menu-0-1-exec = menu-open-2
+menu-0-2 = ""
+menu-0-2-exec = menu-open-3
+
+menu-1-0 = ""
+menu-1-0-exec = menu-open-0
+menu-1-1 = ""
+menu-1-1-exec = systemctl reboot
+
+menu-2-0 = ""
+menu-2-0-exec = systemctl poweroff
+menu-2-1 = ""
+menu-2-1-exec = menu-open-0
+
+menu-3-0 = ""
+menu-3-0-exec = kill -9 -1
+menu-3-1 = ""
+menu-3-1-exec = menu-open-0
+
+[module/disk]
+type = custom/script
+exec = disk-space
+interval = 10
+label-foreground = ${colors.foreground}
+label-background = ${colors.background}
+format-prefix = " "
+format-prefix-foreground = #546E7A
+format-padding = 2
+
+[module/cputemp]
+type = custom/script
+exec = cpu-temp
+interval = 2
+label-foreground = ${colors.foreground}
+label-background = ${colors.background}
+format-prefix = " "
+format-prefix-foreground = #ef6b7b
+format-padding = 2
+
+[module/rofi]
+type = custom/script
+exec = echo " "
+interval = 3600
+click-left = rofi-apps
+label-foreground = ${colors.foreground}
+label-background = ${colors.background}
+format-prefix = 
+format-prefix-foreground = #ef6b7b
+format-padding = 2
+
+[module/memory]
+type = internal/memory
+interval = 2
+format-prefix = " "
+format-prefix-foreground = #bf616a
+label = %gb_free%
+
+[module/cpu]
+type = internal/cpu
+label = %percentage%%
+format-prefix = " "
+format-prefix-foreground = #ef6b7b
+format-background = ${colors.background}
+format-padding = 2
