@@ -1,7 +1,8 @@
 if $(locate_package wine); then
   function wine-isolated () {
     WINEPREFIX="$1" WINEARCH=win32 winetricks sandbox
-    WINEPREFIX="$1" WINEARCH=win32 wine "$2"
+    cp "$2" "$1/drive_c/exec.exe"
+    WINEPREFIX="$1" WINEARCH=win32 wine "C:/exec.exe"
   }
 fi
 
