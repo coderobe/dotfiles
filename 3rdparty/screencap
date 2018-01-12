@@ -168,17 +168,17 @@ if ($use_shell && has_Shell) {
 		}
 	}
 } else {
-	_debug("using fallback method (scrot)");
+	_debug("using fallback method (gnome-screenshot)");
 
 	for ($mode) {
 		when ('area') {
-			system("scrot", "-s", $file);
+			system("gnome-screenshot", "-a", "-f", $file);
 		}
 		when ('fullscreen') {
-			system("scrot", $file);
+			system("gnome-screenshot", "-f", $file);
 		}
 		when ('window') {
-			system("scrot", "-s", $file);
+			system("gnome-screenshot", "-w", "-f", $file);
 		}
 	}
 }
