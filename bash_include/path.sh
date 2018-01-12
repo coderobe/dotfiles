@@ -15,7 +15,7 @@ function addToPathStart () {
 }
 
 if $(locate_package ruby);then
-  addToPath $(ruby -rubygems -e "puts Gem.user_dir")/bin
+  addToPath $(ruby -rrubygems -e "puts Gem.user_dir")/bin
 fi
 
 if $(locate_package perl);then
