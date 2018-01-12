@@ -28,7 +28,6 @@ config_files:
 
   - src: xinitrc
     dst: .xinitrc
-    packages: [ xorg-xset xorg-xrandr xfwm4 xfdesktop xfce-polkit-git xfce4-notifyd bamf thunar ]
 
   - src: config/polybar
     dst: .config/polybar
