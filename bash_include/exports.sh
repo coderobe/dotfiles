@@ -51,3 +51,8 @@ if [ -d "/usr/lib/emscripten" ]; then
   export EMSCRIPTEN="/usr/lib/emscripten"
   export EMSCRIPTEN_FASTCOMP="/usr/lib/emscripten-fastcomp"
 fi
+
+# QT5
+if [ -f "/usr/lib/qt/plugins/platformthemes/libqgtk2.so" ]; then
+  export QT_QPA_PLATFORMTHEME=gtk2
+fi
