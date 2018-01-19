@@ -1,4 +1,4 @@
-alias pastebin="curl -F c=@- https://ptpb.pw"
+alias pastebin="upload-stdin"
 
 alias ls='ls --color=auto '
 alias userctl='systemctl --user '
