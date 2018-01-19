@@ -1,0 +1,8 @@
+#!/usr/bin/env bash
+
+if [ ! -f "${HOME}/.uptmp-code" ]; then
+	echo -ne "missing ~/.uptmp-code"
+	exit
+fi
+
+curl -F code="$(<~/.uptmp-code)" -F randomname=true -F file="@${1}" https://up.tmp.codero.be/api.php?d=upload-tool
