@@ -1,0 +1,292 @@
+#!/usr/bin/env perl
+
+use feature qw(say state switch);
+no if $] >= 5.017011, warnings => qw(experimental::smartmatch);
+use File::Basename qw(dirname);
+use File::Path qw(make_path);
+use File::Spec::Functions qw(rel2abs);
+use Getopt::Long qw(:config bundling no_ignore_case);
+use Net::DBus qw(:typing);
+our ($arg0, $warnings, $errors);
+$::arg0 = (split m!/!, $0)[-1];
+$::debug = !!$ENV{DEBUG};
+sub _debug { warn "debug: @_\n" if $::debug; }
+sub _notice  { warn "notice: @_\n"; ++$::warnings; }
+sub _die   { _err(@_); exit 1; }
+use POSIX qw(strftime :sys_wait_h);
+use Sys::Hostname;
+use Time::HiRes qw(usleep);
+
+sub has_Shell {
+	Net::DBus->session
+	->get_service_owner("org.gnome.Shell")
+}
+
+sub Shell {
+	Net::DBus->session
+	->get_service("org.gnome.Shell")
+	->get_object(shift // "/org/gnome/Shell")
+}
+
+sub Notifications {
+	Net::DBus->session
+	->get_service("org.freedesktop.Notifications")
+	->get_object("/org/freedesktop/Notifications")
+}
+
+sub notify {
+	state $id = 0;
+	my ($summary, %opts) = @_;
+
+	$id = Notifications->Notify(
+		$opts{app} // "Screenshot",
+		$id,
+		$opts{icon} // "document-send",
+		$summary,
+		$opts{body},
+		$opts{actions} // [],
+		$opts{hints} // {},
+		$opts{timeout} // 2000);
+}
+
+sub trash {
+	my ($path) = @_;
+
+	system {"trash"} ("trash", $path);
+
+	if (-e $path) { unlink($path); }
+}
+
+my ($hostname) = split(/\./, hostname());
+
+my $sleep = 0;
+my $sleep_area = 0;
+my $frame = 1;
+my $flash = 1;
+my $cursor = 0;
+my $mode = 'area';
+my $template = "Screenshots/%Y-%m-%d.%H%M%S.$hostname.png";
+my $file_rel = undef;
+my $file = undef;
+my $upload = 0;
+my $temporary = 0;
+my $qrcode = 0;
+my $use_shell = 1;
+my $do_notify = 1;
+
+GetOptions(
+	'a|area'	=> sub { $mode = 'area' },
+	'f|fullscreen'	=> sub { $mode = 'fullscreen' },
+	'w|window'	=> sub { $mode = 'window' },
+	'N|no-upload'	=> sub { $upload = 0 },
+	'frame!'	=> \$frame,
+	'cursor!'	=> \$cursor,
+	'flash!'	=> \$flash,
+	's|sleep=f'	=> \$sleep,
+	'S|sleeparea=f'	=> \$sleep_area,
+	't|temporary!'	=> \$temporary,
+	'Q|qr-decode!'	=> \$qrcode,
+	'shell!'	=> \$use_shell,
+	'notify!'	=> \$do_notify,
+) or exit 2;
+
+if ($qrcode) {
+	$upload = 0;
+	$temporary = 1;
+}
+
+if ($sleep) {
+	say STDERR "waiting $sleep seconds...";
+	usleep($sleep * 1_000_000);
+}
+
+if ($temporary) {
+	$template =~ s/[^.]+?$/temp.$&/;
+}
+
+$file_rel = strftime($template, localtime);
+# TODO: Fix path
+$file = rel2abs($file_rel, "/home/coderobe/Pictures");
+
+_debug("rel path: $file_rel");
+_debug("abs path: $file");
+
+for (dirname $file) {
+	make_path($_) unless -d $_;
+}
+
+if ($use_shell && has_Shell) {
+	_debug("using GNOME Shell interface");
+
+	my $ShellScreenshot = Shell("/org/gnome/Shell/Screenshot");
+
+	for ($mode) {
+		when ('area') {
+			Shell->ShowOSD({icon => "camera-photo-symbolic",
+					label => "Select area"});
+			my ($x, $y, $w, $h) = eval {$ShellScreenshot->SelectArea()}
+			or _die("Shell->SelectArea failed");
+			if ($sleep_area) {
+				say STDERR "waiting $sleep_area seconds...";
+				usleep($sleep_area * 1_000_000);
+			}
+			$ShellScreenshot->ScreenshotArea($x, $y, $w, $h, $flash, $file_rel)
+			or _die("Shell->ScreenshotArea failed");
+		}
+		when ('fullscreen') {
+			$ShellScreenshot->Screenshot($cursor, $flash, $file_rel)
+			or _die("Shell->Screenshot failed");
+		}
+		when ('window') {
+			$ShellScreenshot->ScreenshotWindow($frame, $cursor, $flash, $file_rel)
+			or _die("Shell->ScreenshotWindow failed");
+		}
+	}
+} elsif (-x "/usr/bin/maim" && -x "/usr/bin/slop") {
+	_debug("using fallback method (maim+slop)");
+
+	for ($mode) {
+		when ('area') {
+			if ($sleep_area) {
+				chomp(my $geom = `slop -f %g`);
+				say STDERR "waiting $sleep_area seconds...";
+				usleep($sleep_area * 1_000_000);
+				system("maim", "-g", $geom, $file);
+			} else {
+				system("maim", "-s", $file);
+			}
+		}
+		when ('fullscreen') {
+			system("maim", $file);
+		}
+		when ('window') {
+			if (-x "/usr/bin/xdotool") {
+				system("maim", "-i", int `xdotool getactivewindow`, $file);
+			} else {
+				system("maim", "-s", $file);
+			}
+		}
+	}
+} else {
+	_debug("using fallback method (gnome-screenshot)");
+
+	for ($mode) {
+		when ('area') {
+			system("gnome-screenshot", "-a", "-f", $file);
+		}
+		when ('fullscreen') {
+			system("gnome-screenshot", "-f", $file);
+		}
+		when ('window') {
+			system("gnome-screenshot", "-w", "-f", $file);
+		}
+	}
+}
+
+if (!-f $file) {
+	_debug("screenshot failed, \$file is nil");
+	notify("Screenshot failed.",
+		icon => "error",
+		hints => {
+			category => "transfer",
+		});
+	exit 1;
+}
+
+_debug("screenshot successful, \$file is '$file'");
+
+if ($qrcode) {
+	my $zbarimg_proc;
+	my $zbarimg_pid;
+	my $zbarimg_output;
+
+	if (open(my $zbarimg_proc, "-|", "zbarimg", "--raw", "--quiet", $file)) {
+		chomp($zbarimg_output = <$zbarimg_proc>);
+		close($zbarimg_proc);
+	} else {
+		_die("could not run zbarimg");
+	}
+
+	if ($? == 0) {
+		if (-t 1) {
+			say $zbarimg_output;
+		} else {
+			notify("Qr code found",
+				body => $zbarimg_output);
+		}
+		unlink($file);
+		exit 0;
+	} else {
+		notify("Decode failed",
+			icon => "error");
+		unlink($file);
+		exit 1;
+	}
+}
+
+say $file;
+
+my $uri = "file://$file";
+
+if ($upload) {
+	my $upload_pid;
+	my $upload_output;
+	my $upload_start = time;
+
+	local $SIG{CHLD} = sub {
+		my $pid = waitpid(-1, WNOHANG);
+		if ($pid == $upload_pid) {
+			$upload_pid = 0;
+		}
+	};
+
+	_debug("uploading via cap-upload.sh");
+	$upload_pid = open(my $upload_proc, "-|") || do {
+		open(STDERR, ">&", \*STDOUT);
+		exec("cap-upload.sh", $file) || die "$!\n";
+	};
+
+	while ($upload_pid) {
+		my $t = time - $upload_start;
+		notify("Screenshot captured",
+			body => "Uploading… (".$t."s)",
+			hints => {
+				category => "transfer",
+				transient => dbus_boolean(1),
+			});
+		sleep 1;
+	}
+
+	$upload_output = do { local $/; <$upload_proc> };
+
+	print $upload_output;
+	chomp $upload_output;
+
+	if ($? == 0) {
+		notify("Screenshot uploaded",
+			body => $upload_output,
+			icon => $uri,
+			hints => {
+				category => "transfer.complete",
+				transient => dbus_boolean(1),
+			});
+		if ($temporary) {
+			_debug("screenshot is temporary, deleting");
+			trash($file);
+		}
+	} else {
+		notify("Screenshot upload failed",
+			body => $upload_output,
+			icon => $uri,
+			hints => {
+				category => "transfer.error",
+				transient => dbus_boolean(1),
+			});
+	}
+} else {
+	notify("Screenshot captured",
+		icon => $uri) if $do_notify;
+	if ($temporary) {
+		_notice("uploading disabled; keeping temporary screenshot");
+	}
+}
