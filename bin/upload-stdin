@@ -1,0 +1,7 @@
+#!/usr/bin/env bash
+
+UCT_TEMP="$(mktemp --suffix=.txt)"
+
+cat > "${UCT_TEMP}"
+upload "${UCT_TEMP}"
+echo
