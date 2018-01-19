@@ -73,5 +73,5 @@ if $(locate_package git); then
   CDR_VERSION="updated $(cd ${CDR_LOCATION} && git log -1 --format=%ar)"
 fi
 
-cdr_log "this is a $(cdr_colorize ${COL_RED} $(basename ${SHELL})) shell, running $(cdr_colorize ${COL_CYAN} coderobe/dotfiles) [$(cdr_colorize ${COL_BROWN} ${CDR_VERSION})] on $(cdr_colorize ${COL_PINK} ${HOSTNAME})"
-
+#cdr_log "this is a $(cdr_colorize ${COL_RED} $(basename ${SHELL})) shell"
+cdr_log "using $(cdr_colorize ${COL_CYAN} coderobe/dotfiles) [$(cdr_colorize ${COL_BROWN} ${CDR_VERSION})] on $(cdr_colorize ${COL_PINK} ${HOSTNAME})"
