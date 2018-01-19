@@ -1,0 +1,57 @@
+#!/usr/bin/env ruby
+require "yaml"
+require "colorize"
+require "fileutils"
+
+$files = {}
+
+def queue_file destination, source
+	key = source.split "/"
+	key.shift unless key.size < 2
+	key = key.join("/")
+	$files[key] << [destination, source] rescue $files[key] = [destination, source]
+end
+
+def queue_folder destination, source
+	destination_files = Dir.glob "#{destination}/**/*"
+	source_files = Dir.glob "#{source}/**/*"
+	destination_files.map!{|e| [e.delete_prefix(destination), destination]}
+	source_files.map!{|e| [e.delete_prefix(source), source]}
+	destination_files.each do |elem|
+		$files[elem.first] << lpath rescue $files[elem.first] = [elem.last]
+	end
+	source_files.each do |elem|
+		$files[elem.first] << elem.last rescue $files[elem.first] = [elem.last]
+	end
+end
+
+manifest = YAML.load_file "manifest.yml"
+
+manifest["config_files"].each do |config|
+	destination = "#{ENV['HOME']}/#{config['dst']}"
+	source = config["src"]
+	queue_file destination, source
+end
+
+manifest["components"].each do |config|
+	destination = "#{ENV['HOME']}/#{config['dst']}"
+	source = config["src"]
+	queue_folder destination, source
+end
+
+$files.each do |file, sources|
+	if sources.size < 2
+		puts "#{File.basename(file)} only in #{sources.first}".yellow
+	elsif sources.size == 2		
+		list = sources.map{|e| "#{e.delete_suffix(file)}#{file}"}
+		unless list.map{|e| File.directory? e}.reduce(:|) || FileUtils.compare_file(*list)
+			puts "mismatch in #{list.last}!".red
+		end
+	else
+		puts "something unexpected happened, debugging required".red.blink
+		require "pry"
+		binding.pry
+	end
+end
+
+puts "done".green.underline
