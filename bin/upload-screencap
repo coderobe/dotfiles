@@ -1,0 +1,6 @@
+#!/usr/bin/env bash
+
+US_SCP="$(screencap '$@')"
+notify-send "Upload" "Uploading..."
+upload-to-clipboard "${US_SCP}"
+notify-send "Upload" "Done"
