@@ -1,0 +1,8 @@
+#!/usr/bin/env bash
+
+UCT_TEMP="$(mktemp --suffix=.txt)"
+
+xclip -selection c -o > "${UCT_TEMP}"
+notify-send "Upload" "Uploading..."
+upload-to-clipboard "${UCT_TEMP}"
+notify-send "Upload" "Done"
