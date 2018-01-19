@@ -11,8 +11,8 @@ screenchange-reload = true
 [bar/top]
 ; Use  xrandr -q | grep " connected" | cut -d ' ' -f1
 ; for a list of connected monitors
-monitor = HDMI1
-monitor-fallback = eDP1
+monitor = HDMI-1
+monitor-fallback = eDP-1
 monitor-strict = false
 override-redirect = false
 width = 100%
@@ -31,7 +31,7 @@ font-1 = icomoon :size=12:0
 font-2 = FontAwesome:pixelsize=10;2
 
 modules-left = rofi menu
-modules-center = title
+modules-center =
 modules-right = disk memory cpu temp volume backlight battery clock
 
 module-margin = 0
@@ -50,8 +50,8 @@ type = internal/xwindow
 [module/temp]
 type = internal/temperature
 thermal-zone = 1
-hwmon-path = /sys/devices/platform/coretemp.0/hwmon/hwmon1/temp1_input
-#hwmon-path = /sys/devices/platform/coretemp.0/hwmon/hwmon0/temp1_input
+#hwmon-path = /sys/devices/platform/coretemp.0/hwmon/hwmon1/temp1_input
+hwmon-path = /sys/devices/platform/coretemp.0/hwmon/hwmon0/temp1_input
 warn-temperature = 75
 format = <ramp> <label>
 format-warn = <ramp> <label-warn>
@@ -149,23 +149,38 @@ menu-0-0 = ""
 menu-0-0-exec = menu-open-1
 menu-0-1 = ""
 menu-0-1-exec = menu-open-2
-menu-0-2 = ""
+menu-0-2 = ""
 menu-0-2-exec = menu-open-3
+menu-0-3 = ""
+menu-0-3-exec = menu-open-4
 
 menu-1-0 = ""
 menu-1-0-exec = menu-open-0
 menu-1-1 = ""
 menu-1-1-exec = systemctl reboot
+menu-1-0-foreground = #ff0000
+menu-1-1-foreground = #00ff00
 
 menu-2-0 = ""
 menu-2-0-exec = systemctl poweroff
 menu-2-1 = ""
 menu-2-1-exec = menu-open-0
+menu-2-0-foreground = #ff0000
+menu-2-1-foreground = #00ff00
 
 menu-3-0 = ""
-menu-3-0-exec = kill -9 -1
+menu-3-0-exec = systemctl suspend
 menu-3-1 = ""
 menu-3-1-exec = menu-open-0
+menu-3-0-foreground = #ff0000
+menu-3-1-foreground = #00ff00
+
+menu-4-0 = ""
+menu-4-0-exec = loginctl lock-sessions
+menu-4-1 = ""
+menu-4-1-exec = menu-open-0
+menu-4-0-foreground = #ff0000
+menu-4-1-foreground = #00ff00
 
 [module/disk]
 type = custom/script
