@@ -23,9 +23,6 @@ config_files:
     dst: .perl5/lib/perl5/Xclip.pm
     packages: [ perl ]
 
-  - src: 3rdparty/screencap
-    dst: .bin/screencap
-
   - src: xinitrc
     dst: .xinitrc
 
