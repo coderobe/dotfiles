@@ -4,8 +4,20 @@ alt + F2
 Print
 	screencap
 
+Scroll_Lock
+	upload-screencap
+
+shift + Scroll_Lock
+	upload-last-screencap
+
+Pause
+	upload-clipboard-text
+
 super + s
         pkill -USR1 -x sxhkd
+
+super + l
+	loginctl lock-sessions
 
 XF86Audio{RaiseVolume,LowerVolume,Mute,MicMute}
         amixer {-D pulse sset Master '5%+',-D pulse sset Master '5%-',set Master toggle,set Capture toggle}
