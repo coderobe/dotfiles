@@ -5,4 +5,4 @@ if [ ! -f "${HOME}/.uptmp-code" ]; then
 	exit
 fi
 
-curl -F code="$(<~/.uptmp-code)" -F randomname=true -F file="@${1}" https://up.tmp.codero.be/api.php?d=upload-tool
+curl -F code="$(<~/.uptmp-code)" -F randomname=true -F file="@${1}" https://up.tmp.codero.be/api.php?d=upload-tool 2>/dev/null
