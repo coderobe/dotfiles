@@ -5,7 +5,7 @@ Print
 	screencap
 
 Scroll_Lock
-	upload-screencap
+	screencap -uc
 
 shift + Scroll_Lock
 	upload-last-screencap
