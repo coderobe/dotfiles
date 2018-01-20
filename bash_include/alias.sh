@@ -1,3 +1,5 @@
+#!/usr/bin/env bash
+
 alias pastebin="upload-stdin"
 
 alias ls='ls --color=auto '

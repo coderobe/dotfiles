@@ -1,3 +1,5 @@
+#!/usr/bin/env bash
+
 export COL_WHITE='\033[1;37m'
 export COL_LIGHTGRAY='033[0;37m'
 export COL_GRAY='\033[1;30m'
