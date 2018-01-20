@@ -224,6 +224,7 @@ if ($qrcode) {
 	}
 }
 
+system("optipng", $file);
 say $file;
 
 my $uri = "file://$file";
