@@ -1,7 +1,7 @@
 #!/usr/bin/env bash
 
 SC_P="${HOME}/Pictures/Screenshots"
-SC_L="$(ls -Art '${SC_P}' | tail -n1)"
+SC_L="$(ls -Art "${SC_P}" | tail -n1)"
 notify-send "Upload" "Uploading ${SC_L}..."
 upload-to-clipboard "${SC_P}/${SC_L}"
 notify-send "Upload" "Done"
