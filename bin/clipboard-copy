@@ -1,3 +1,6 @@
 #!/usr/bin/env bash
 
-cat | xclip -selection c
+if [ $# -eq 0 ]
+  then cat | xclip -selection c
+  else echo -ne "$*" | xclip -selection c
+fi
