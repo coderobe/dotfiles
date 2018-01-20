@@ -252,8 +252,8 @@ function prompt_workingdir () {
   fi
   local pwdmaxlen="$((COLUMNS/4))"
   local trunc_symbol="..."
-  if [[ "$PWD" == "$HOME*" ]]; then
-    newPWD="~${PWD#$HOME}"
+  if [[ "${PWD}" == "${HOME}"* ]]; then
+    newPWD="~${PWD#${HOME}}"
   else
     newPWD="${PWD}"
   fi
