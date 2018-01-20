@@ -191,11 +191,11 @@ if ($qrcode) {
 }
 
 system("optipng", $file);
-if ($to_clipboard) {
+if ($to_clipboard && !$upload) {
 	_debug("copying file path to clipboard");
 	chomp($file);
 	system("clipboard-copy", $file);
-} else {
+} elsif (!$to_clipboard) {
 	say $file;
 }
 
@@ -234,14 +234,6 @@ if ($upload) {
 
 	chomp($upload_output);
 
-	if($to_clipboard){
-		_debug("copying link to clipboard");
-		system("clipboard-copy", $upload_output);
-	} else {
-		print $upload_output;
-	}
-
-
 	if ($? == 0) {
 		notify("Screenshot uploaded",
 			body => $upload_output,
@@ -262,6 +254,13 @@ if ($upload) {
 				category => "transfer.error",
 				transient => dbus_boolean(1),
 			});
+	}
+
+	if($to_clipboard){
+		_debug("copying link to clipboard");
+		system("clipboard-copy", $upload_output);
+	} else {
+		print $upload_output;
 	}
 } else {
 	notify("Screenshot captured",
