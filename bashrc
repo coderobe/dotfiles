@@ -20,8 +20,8 @@ fi
 for script in "${CDR_SCRIPTPATH}"*.sh; do
   CDR_SCRIPT="${script%%.*}"
   if [ -z "${CDR_DEBUG}" ]
-    then source "${CDR_SCRIPTPATH}${script}" 2>/dev/null
-    else source "${CDR_SCRIPTPATH}${script}"
+    then source "${script}" 2>/dev/null
+    else source "${script}"
   fi
 done
 
@@ -45,7 +45,7 @@ function wsl_fix_daemon {
   . "${ssh_env}" > /dev/null
 }
 export CDR_WSL=0
-if ! grep -q "$(uname -a | grep 'Microsoft')"; then
+if uname -a | grep 'Microsoft'; then
   export CDR_WSL=1
   export DISPLAY="$(hostname):0.0"
   if [ -f "${ssh_env}" ]; then
@@ -68,7 +68,7 @@ fi
 # Evaluate all execute scripts
 for script in "${CDR_EXECPATH}"*.sh
   do CDR_SCRIPT=${script%%.*}
-  eval "${CDR_EXECPATH}${script}"
+  eval "${script}"
 done
 
 # shellcheck disable=SC2034
