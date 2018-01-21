@@ -38,7 +38,7 @@ sub notify {
 		$opts{body},
 		$opts{actions} // [],
 		$opts{hints} // {},
-		$opts{timeout} // 2000);
+		$opts{timeout} // 4000);
 }
 
 sub trash {
