@@ -32,7 +32,7 @@ font-2 = FontAwesome:pixelsize=10;2
 
 modules-left = rofi menu
 modules-center =
-modules-right = disk memory cpu temp volume backlight battery clock
+modules-right = phone-battery disk memory cpu temp volume backlight battery clock
 
 module-margin = 0
 padding-right = 0
@@ -181,6 +181,17 @@ menu-4-1 = ""
 menu-4-1-exec = menu-open-0
 menu-4-0-foreground = #ff0000
 menu-4-1-foreground = #00ff00
+
+[module/phone-battery]
+type = custom/script
+exec = mcctl get-battery
+interval = 60
+label-foreground = ${colors.foreground}
+label-background = ${colors.background}
+format-prefix = " "
+format-prefix-foreground = #528B8B
+format-suffix = "%"
+format-padding = 2
 
 [module/disk]
 type = custom/script
