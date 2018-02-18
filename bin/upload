@@ -1,8 +1,11 @@
 #!/usr/bin/env bash
 
-if [ ! -f "${HOME}/.uptmp-code" ]; then
-	echo -ne "missing ~/.uptmp-code"
+if [ ! -f "${HOME}/.cdr-shr-login" ]; then
+	echo -ne "missing ~/.cdr-shr-login"
 	exit
 fi
 
-curl -F code="$(<~/.uptmp-code)" -F randomname=true -F file="@${1}" https://up.tmp.codero.be/api.php?d=upload-tool 2>/dev/null
+username=$(grep -E '^USER=' ~/.cdr-shr-login | cut -d'=' -f2)
+password=$(grep -E '^PASS=' ~/.cdr-shr-login | cut -d'=' -f2)
+
+curl -F username=${username} -F password=${password} -F file="@${1}" https://shr.codero.be/upload 2>/dev/null
