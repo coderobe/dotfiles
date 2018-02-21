@@ -5,6 +5,10 @@ require "fileutils"
 
 $files = {}
 
+def compare_file *args
+  FileUtils.compare_file *args rescue nil
+end
+
 def queue_file destination, source
 	key = source.split "/"
 	key.shift unless key.size < 2
@@ -42,9 +46,9 @@ end
 $files.each do |file, sources|
 	if sources.size < 2
 		puts "#{File.basename(file)} only in #{sources.first}".yellow
-	elsif sources.size == 2		
+	elsif sources.size == 2
 		list = sources.map{|e| "#{e.delete_suffix(file)}#{file}"}
-		unless list.map{|e| File.directory? e}.reduce(:|) || FileUtils.compare_file(*list)
+		unless list.map{|e| File.directory? e}.reduce(:|) || compare_file(*list)
 			puts "mismatch in #{list.last}!".red
 		end
 	else
