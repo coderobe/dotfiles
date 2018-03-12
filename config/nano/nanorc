@@ -1,3 +1,4 @@
 include /usr/share/nano/*
 set nowrap
 set suspend
+set smooth
