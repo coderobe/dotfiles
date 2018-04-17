@@ -10,10 +10,6 @@ components:
     dst: .config/nano
     packages: [ nano ]
 
-  - src: config/trizen
-    dst: .config/trizen
-    packages: [ trizen ]
-
   - src: config/dapper
     dst: .config/dapper
     packages: [ dapper ]
