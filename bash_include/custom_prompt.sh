@@ -7,72 +7,27 @@
 # Original by:   Dave Vehrs
 # Modified by:   Robin Broda (coderobe)
 
-# Current Format: USER@HOST [dynamic section] CURRENT DIRECTORY $ 
-# USER:      (also sets the base color for the prompt)
-#   Red       == Root(UID 0) Login shell (i.e. sudo bash)
-#   Light Red == Root(UID 0) Login shell (i.e. su -l or direct login)
-#   Yellow    == Root(UID 0) priviledges in non-login shell (i.e. su)
-#   Brown     == SU to user other than root(UID 0)
-#   Green     == Normal user
-# @:
-#   Light Red == http_proxy environmental variable undefined.
-#   Green     == http_proxy environmental variable configured.
-# HOST:
-#   Red       == Insecure remote connection (unknown type)
-#   Yellow    == Insecure remote connection (Telnet)
-#   Brown     == Insecure remote connection (RSH)
-#   Cyan      == Secure remote connection (i.e. SSH)
-#   Purple     == Local session
-# DYNAMIC SECTION:
-#     (If count is zero for any of the following, it will not appear)
-#   [tmx:#] ==== Number of detached tmux sessions
-#     Yellow    == 1-2
-#     Red       == 3+
-#   [bg:#]  ==== Number of backgrounded but still running jobs
-#     Yellow    == 1-10
-#     Red       == 11+
-#   [stp:#] ==== Number of stopped (backgrounded) jobs
-#     Yellow    == 1-2
-#     Red       == 3+
-# CURRENT DIRECTORY:     (truncated to 1/4 screen width)
-#   Red       == Current user does not have write priviledges
-#   Green     == Current user does have write priviledges
-# NOTE:
-#   1.  Displays message on day change at midnight on the line above the
-#       prompt (Day changed to...).
-#   2.  Command is added to the history file each time you hit enter so its
-#       available to all shells.
-
-# Configure Colors:
-COLOR_WHITE='\033[1;37m'
-COLOR_LIGHTGRAY='033[0;37m'
-COLOR_GRAY='\033[1;30m'
-COLOR_BLACK='\033[0;30m'
-COLOR_RED='\033[0;31m'
-COLOR_LIGHTRED='\033[1;31m'
-COLOR_GREEN='\033[0;32m'
-COLOR_LIGHTGREEN='\033[1;32m'
-COLOR_BROWN='\033[0;33m'
-COLOR_YELLOW='\033[1;33m'
-COLOR_BLUE='\033[0;34m'
-COLOR_LIGHTBLUE='\033[1;34m'
-COLOR_PURPLE='\033[0;35m'
-COLOR_PINK='\033[1;35m'
-COLOR_CYAN='\033[0;36m'
-COLOR_LIGHTCYAN='\033[1;36m'
-COLOR_DEFAULT='\033[0m'
-
-# Function to set prompt_command to.
+# Function to set PROMPT_COMMAND to.
 function promptcmd () {
-    [[ "${CDR_DEBUG}" ]] && cdr_log "" "promptcmd() enter"
+    cdr_debug_log "promptcmd()" "enter"
+
+    if [[ "${CDR_SYSTEM}" == "" ]]; then
+        CDR_SYSTEM="$(uname)"
+        cdr_debug_log "promptcmd()" "set CDR_SYSTEM to ${CDR_SYSTEM}"
+    else
+        cdr_debug_log "promptcmd()" "CDR_SYSTEM is ${CDR_SYSTEM}"
+    fi
+
+    cdr_debug_log "promptcmd()" "flush history"
     history -a
+
     local SSH_FLAG=0
     local TTY="$(tty | awk -F/dev/ '{print $2}')"
     if [[ "${TTY}" ]]; then
         local SESS_SRC=$(who | grep "$TTY " | awk '{print $6 }')
     fi
 
-    [[ "${CDR_DEBUG}" ]] && cdr_log "" "promptcmd() titlebar"
+    cdr_debug_log "promptcmd()" "titlebar"
     # Titlebar
     case "${TERM}" in
         xterm*)
@@ -84,163 +39,177 @@ function promptcmd () {
     esac
     PS1="${TITLEBAR}"
 
-    [[ "${CDR_DEBUG}" ]] && cdr_log "" "promptcmd() daychange"
+    cdr_debug_log "promptcmd()" "daychange"
     # Test for day change.
     if [[ "$DAY" ]]; then
         export DAY="$(date +%A)"
     else
         local today="$(date +%A)"
         if [ "${DAY}" != "${today}" ]; then
-            PS1="${PS1}\n\[${COLOR_GREEN}\]Day changed to $(date '+%A, %d %B %Y').\n"
+            PS1="${PS1}\n\[${COL_GREEN}\]Day changed to $(date '+%A, %d %B %Y').\n"
             export DAY="$today"
        fi
     fi
 
-    [[ "${CDR_DEBUG}" ]] && cdr_log "" "promptcmd() user"
+    cdr_debug_log "promptcmd()" "user"
     # User
     if [ "${UID}" -eq 0 ] ; then
         if [ "${USER}" == "${LOGNAME}" ]; then
             if [[ "${SUDO_USER}" ]]; then
-                PS1="${PS1}\[${COLOR_RED}\]\u"
+                PS1="${PS1}\[${COL_RED}\]\u"
             else
-                PS1="${PS1}\[${COLOR_LIGHTRED}\]\u"
+                PS1="${PS1}\[${COL_LIGHTRED}\]\u"
             fi
         else
-            PS1="${PS1}\[${COLOR_YELLOW}\]\u"
+            PS1="${PS1}\[${COL_YELLOW}\]\u"
         fi
     else
         if [ "${USER}" == "${LOGNAME}" ]; then
-            PS1="${PS1}\[${COLOR_GREEN}\]\u"
+            PS1="${PS1}\[${COL_GREEN}\]\u"
         else
-            PS1="${PS1}\[${COLOR_BROWN}\]\u"
+            PS1="${PS1}\[${COL_BROWN}\]\u"
         fi
     fi
 
-    [[ "${CDR_DEBUG}" ]] && cdr_log "" "promptcmd() http_proxy"
+    cdr_debug_log "promptcmd()" "http_proxy"
     # HTTP Proxy var configured or not
     # shellcheck disable=SC2154
     if [ -n "$http_proxy" ] ; then
-        PS1="${PS1}\[${COLOR_GREEN}\]@"
+        PS1="${PS1}\[${COL_GREEN}\]@"
     else
-        PS1="${PS1}\[${COLOR_LIGHTRED}\]@"
+        PS1="${PS1}\[${COL_LIGHTRED}\]@"
     fi
 
-    [[ "${CDR_DEBUG}" ]] && cdr_log "" "promptcmd() host"
+    cdr_debug_log "promptcmd()" "host"
     # Host
     if [[ "${SSH_CLIENT}" ]] || [[ "${SSH2_CLIENT}" ]]; then
         SSH_FLAG=1
     fi
     if [ "${SSH_FLAG}" -eq 1 ]; then
-       PS1="${PS1}\[${COLOR_CYAN}\]\h "
+       PS1="${PS1}\[${COL_CYAN}\]\h "
     elif [[ -n "${SESS_SRC}" ]]; then
         if [ "${SESS_SRC}" == "(:0.0)" ]; then
-            PS1="${PS1}\[${COLOR_PURPLE}\]\h "
+            PS1="${PS1}\[${COL_PURPLE}\]\h "
         else
             local parent_process="$(</proc/${PPID}/cmdline)"
             if [[ "$parent_process" == "in.rlogind*" ]]; then
-                PS1="${PS1}\[${COLOR_BROWN}\]\h "
+                PS1="${PS1}\[${COL_BROWN}\]\h "
             elif [[ "$parent_process" == "in.telnetd*" ]]; then
-                PS1="${PS1}\[${COLOR_YELLOW}\]\h "
+                PS1="${PS1}\[${COL_YELLOW}\]\h "
             else
-                PS1="${PS1}\[${COLOR_LIGHTRED}\]\h "
+                PS1="${PS1}\[${COL_LIGHTRED}\]\h "
             fi
         fi
     elif [[ "${SESS_SRC}" == "" ]]; then
-        PS1="${PS1}\[${COLOR_PURPLE}\]\h "
+        PS1="${PS1}\[${COL_PURPLE}\]\h "
     else
-        PS1="${PS1}\[${COLOR_RED}\]\h "
+        PS1="${PS1}\[${COL_RED}\]\h "
     fi
 
-    [[ "${CDR_DEBUG}" ]] && cdr_log "" "promptcmd() tmux"
+    cdr_debug_log "promptcmd()" "darling"
+    # Inside a darling session
+    if [[ "${CDR_FIRSTRUN}" != 1 ]]; then
+        cdr_debug_log "promptcmd()" "-> looking for darling hints"
+        [ -e /etc/darling/version.conf ] && CDR_DARLING="true"
+    fi
+    if [[ "${CDR_DARLING}" != "" ]]; then
+        cdr_debug_log "promptcmd()" "-> is darling"
+        PS1="${PS1}\[${COL_CYAN}\][darling] "
+    fi
+
+    cdr_debug_log "promptcmd()" "tmux"
     # Detached tmux Sessions
     local DTCHSCRN="$(tmux ls 2>/dev/null | grep -c -E "^[0-9]+:")"
     if [ "${DTCHSCRN}" -gt 2 ]; then
-        PS1="${PS1}\[${COLOR_RED}\][tmx:${DTCHSCRN}] "
+        PS1="${PS1}\[${COL_RED}\][tmx:${DTCHSCRN}] "
     elif [ "${DTCHSCRN}" -gt 0 ]; then
-        PS1="${PS1}\[${COLOR_YELLOW}\][tmx:${DTCHSCRN}] "
+        PS1="${PS1}\[${COL_YELLOW}\][tmx:${DTCHSCRN}] "
     fi
 
-    [[ "${CDR_DEBUG}" ]] && cdr_log "" "promptcmd() machinectl"
+    cdr_debug_log "promptcmd()" "machinectl"
     # Running Machinectl VMs
     local MCTLVM="No"
-    if [ "${CDR_WSL}" -eq 0 ]; then
+    if [ "${CDR_WSL}" -eq 0 ] && [ "${CDR_SYSTEM}" == "Linux" ] && command -v machinectl 2>&1 >/dev/null; then
         MCTLVM=$(machinectl list | tail -n1 | cut -d' ' -f1)
     fi
     if [ "${MCTLVM}" == "No" ]; then
         MCTLVM=0
     fi
     if [ "${MCTLVM}" -gt 0 ]; then
-        PS1="${PS1}\[${COLOR_PINK}\][mctl:${MCTLVM}] "
+        PS1="${PS1}\[${COL_PINK}\][mctl:${MCTLVM}] "
     fi
 
-    [[ "${CDR_DEBUG}" ]] && cdr_log "" "promptcmd() bg"
+    cdr_debug_log "promptcmd()" "bg"
     # Backgrounded running jobs
     local BKGJBS="$(jobs -r | wc -l)"
     if [ "${BKGJBS}" -gt 2 ]; then
-        PS1="${PS1}\[${COLOR_RED}\][bg:${BKGJBS}]"
+        PS1="${PS1}\[${COL_RED}\][bg:${BKGJBS}]"
     elif [ "${BKGJBS}" -gt 0 ]; then
-        PS1="${PS1}\[${COLOR_YELLOW}\][bg:${BKGJBS}] "
+        PS1="${PS1}\[${COL_YELLOW}\][bg:${BKGJBS}] "
     fi
 
-    [[ "${CDR_DEBUG}" ]] && cdr_log "" "promptcmd() stopped jobs"
+    cdr_debug_log "promptcmd()" "stopped jobs"
     # Stopped Jobs
     local STPJBS="$(jobs -s | wc -l)"
     if [ "${STPJBS}" -gt 2 ]; then
-        PS1="${PS1}\[${COLOR_RED}\][stp:${STPJBS}]"
+        PS1="${PS1}\[${COL_RED}\][stp:${STPJBS}]"
     elif [ "${STPJBS}" -gt 0 ]; then
-        PS1="${PS1}\[${COLOR_YELLOW}\][stp:${STPJBS}] "
+        PS1="${PS1}\[${COL_YELLOW}\][stp:${STPJBS}] "
     fi
 
-    [[ "${CDR_DEBUG}" ]] && cdr_log "" "promptcmd() bracket open"
+    cdr_debug_log "promptcmd()" "bracket open"
     # Bracket {
     if [ "${UID}" -eq 0 ]; then
         if [ "${USER}" == "${LOGNAME}" ]; then
             if [[ "${SUDO_USER}" ]]; then
-                PS1="${PS1}\[${COLOR_RED}\]"
+                PS1="${PS1}\[${COL_RED}\]"
             else
-                PS1="${PS1}\[${COLOR_LIGHTRED}\]"
+                PS1="${PS1}\[${COL_LIGHTRED}\]"
             fi
         else
-            PS1="${PS1}\[${COLOR_YELLOW}\]"
+            PS1="${PS1}\[${COL_YELLOW}\]"
         fi
     else
         if [ "${USER}" == "${LOGNAME}" ]; then
-            PS1="${PS1}\[${COLOR_GREEN}\]"
+            PS1="${PS1}\[${COL_GREEN}\]"
         else
-            PS1="${PS1}\[${COLOR_BROWN}\]"
+            PS1="${PS1}\[${COL_BROWN}\]"
         fi
     fi
 
-    [[ "${CDR_DEBUG}" ]] && cdr_log "" "promptcmd() wd"
+    cdr_debug_log "promptcmd()" "wd"
     # Working directory
     if [ -w "${PWD}" ]; then
-        PS1="${PS1}\[${COLOR_GREEN}\]$(prompt_workingdir)"
+        PS1="${PS1}\[${COL_GREEN}\]$(prompt_workingdir)"
     else
-        PS1="${PS1}\[${COLOR_RED}\]$(prompt_workingdir)"
+        PS1="${PS1}\[${COL_RED}\]$(prompt_workingdir)"
     fi
 
-    [[ "${CDR_DEBUG}" ]] && cdr_log "" "promptcmd() bracket close"
+    cdr_debug_log "promptcmd()" "bracket close"
     # Closing bracket } and $\#
     if [ "${UID}" -eq 0 ]; then
         if [ "${USER}" == "${LOGNAME}" ]; then
             if [[ "${SUDO_USER}" ]]; then
-                PS1="${PS1}\[${COLOR_RED}\]"
+                PS1="${PS1}\[${COL_RED}\]"
             else
-                PS1="${PS1}\[${COLOR_LIGHTRED}\]"
+                PS1="${PS1}\[${COL_LIGHTRED}\]"
             fi
         else
-            PS1="${PS1}\[${COLOR_YELLOW}\]"
+            PS1="${PS1}\[${COL_YELLOW}\]"
         fi
     else
         if [ "${USER}" == "${LOGNAME}" ]; then
-            PS1="${PS1}\[${COLOR_GREEN}\]"
+            PS1="${PS1}\[${COL_GREEN}\]"
         else
-            PS1="${PS1}\[${COLOR_BROWN}\]"
+            PS1="${PS1}\[${COL_BROWN}\]"
         fi
     fi
-    PS1="${PS1} \$\[${COLOR_DEFAULT}\] "
-    [[ "${CDR_DEBUG}" ]] && cdr_log "" "promptcmd() leave"
+    PS1="${PS1} \$\[${COL_NORM}\] "
+
+    CDR_FIRSTRUN=1
+    cdr_debug_log "promptcmd()" "leave"
 }
+export -f promptcmd
 
 # Trim working dir to 1/4 the screen width
 function prompt_workingdir () {
@@ -258,11 +227,12 @@ function prompt_workingdir () {
     newPWD="${PWD}"
   fi
   if [ "${#newPWD}" -gt "$pwdmaxlen" ]; then
-    local pwdoffset=$(("${#newPWD}" - "$pwdmaxlen" + 3))
+    local pwdoffset=$((${#newPWD} - ${pwdmaxlen} + 3))
     newPWD="${trunc_symbol}${newPWD:$pwdoffset:$pwdmaxlen}"
   fi
   echo "$newPWD"
 }
+export -f prompt_workingdir
 
 # Determine what prompt to display:
 # 1.  Display simple custom prompt for shell sessions started
@@ -285,8 +255,7 @@ function load_prompt () {
     else
         export DAY="$(date +%A)"
         PROMPT_COMMAND=promptcmd
-     fi
-    export PS1 PROMPT_COMMAND
+    fi
 }
 
 load_prompt

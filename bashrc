@@ -65,6 +65,10 @@ if uname -a | grep 'Microsoft'; then
   export NO_AT_BRIDGE=1
 fi
 
+CDR_FIRSTRUN=0
+CDR_SYSTEM="$(uname)"
+CDR_DARLING=""
+
 # Evaluate all execute scripts
 for script in "${CDR_EXECPATH}"*.sh
   do CDR_SCRIPT=${script%%.*}
