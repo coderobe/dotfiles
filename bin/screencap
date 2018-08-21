@@ -23,7 +23,7 @@ sub _die   { _err(@_); exit 1; }
 sub Notifications {
 	Net::DBus->session
 	->get_service("org.freedesktop.Notifications")
-	->get_object("/org/freedesktop/Notifications")
+	->get_object("/org/freedesktop/Notifications", "org.freedesktop.Notifications")
 }
 
 sub notify {
