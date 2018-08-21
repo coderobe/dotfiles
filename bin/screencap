@@ -63,6 +63,7 @@ my $qrcode = 0;
 my $use_shell = 1;
 my $do_notify = 1;
 my $to_clipboard = 0;
+my $compact = 1;
 
 GetOptions(
 	'a|area'	=> sub { $mode = 'area' },
@@ -75,6 +76,7 @@ GetOptions(
 	't|temporary!'	=> \$temporary,
 	'Q|qr-decode!'	=> \$qrcode,
 	'N|no-notify!'	=> sub { $do_notify = 0 },
+	'C|no-compact'  => sub { $compact = 0 },
 ) or exit 2;
 
 if ($qrcode) {
@@ -190,7 +192,10 @@ if ($qrcode) {
 	}
 }
 
-system("optipng", $file);
+if ($compact) {
+	system("optipng", $file);
+}
+
 if ($to_clipboard && !$upload) {
 	_debug("copying file path to clipboard");
 	chomp($file);
