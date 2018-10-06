@@ -1,5 +1,11 @@
 #!/usr/bin/env bash
 
+if locate_package xdg-open; then
+  function open () {
+    xdg-open $@
+  }
+fi
+
 if locate_package wine; then
   function wine-isolated () {
     WINEPREFIX="$1" winetricks sandbox
