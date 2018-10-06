@@ -256,6 +256,8 @@ function load_prompt () {
         export DAY="$(date +%A)"
         PROMPT_COMMAND=promptcmd
     fi
+    export PS1
+    export PROMPT_COMMAND
 }
 
 load_prompt
